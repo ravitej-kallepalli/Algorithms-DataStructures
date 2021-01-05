@@ -33,49 +33,67 @@ class MergeTwoSortedLinkedLists {
 
         while (list1 != null && list2 != null) {
             if (list1.value <= list2.value) {
-                if (resultList == null) {
-                    resultList = ListNode(list1.value)
-                    endNode = resultList
-                } else {
-                    endNode?.next = ListNode(list1.value)
-                    endNode = endNode?.next
+                swapNodes(list1, resultList, endNode).apply {
+                    list1 = this.first
+                    resultList = this.second
+                    endNode = this.third
                 }
-                list1 = list1.next
             } else {
-                if (resultList == null) {
-                    resultList = ListNode(list2.value)
-                    endNode = resultList
-                } else {
-                    endNode?.next = ListNode(list2.value)
-                    endNode = endNode?.next
+                swapNodes(list2, resultList, endNode).apply {
+                    list2 = this.first
+                    resultList = this.second
+                    endNode = this.third
                 }
-                list2 = list2.next
             }
         }
 
         while (list1 != null) {
-            if (resultList == null) {
-                resultList = ListNode(list1.value)
-                endNode = resultList
-            } else {
-                endNode?.next = ListNode(list1.value)
-                endNode = endNode?.next
+            swapNodes(list1!!, resultList, endNode).apply {
+                list1 = this.first
+                resultList = this.second
+                endNode = this.third
             }
-            list1 = list1.next
         }
 
         while (list2 != null) {
-            if (resultList == null) {
-                resultList = ListNode(list2.value)
-                endNode = resultList
-            } else {
-                endNode?.next = ListNode(list2.value)
-                endNode = endNode?.next
+            swapNodes(list2!!, resultList, endNode).apply {
+                list2 = this.first
+                resultList = this.second
+                endNode = this.third
             }
-            list2 = list2.next
         }
 
         return resultList
+    }
+
+    /**
+     * This function basically checks
+     * If resultNode is null -> Initiate new list and keep track of endNode for future ref.
+     * If resultNode is not null -> Add the new node to the end of list node.
+     * And move to the next node.
+     *
+     * @param listNode - current node we are looking at
+     * @param result - the result list
+     * @param endNode - the end node to keep track of the end of the result list
+     */
+    private fun swapNodes(
+        listNode: ListNode,
+        result: ListNode?,
+        endNode: ListNode?
+    ): Triple<ListNode?, ListNode?, ListNode?> {
+
+        var tempResult: ListNode? = result
+        var tempEndNode: ListNode? = endNode
+
+        if (result == null) {
+            tempResult = ListNode(listNode.value)
+            tempEndNode = tempResult
+        } else {
+            tempEndNode?.next = ListNode(listNode.value)
+            tempEndNode = tempEndNode?.next
+        }
+
+        return Triple(listNode.next, tempResult, tempEndNode)
     }
 }
 
